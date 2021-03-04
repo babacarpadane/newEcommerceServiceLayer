@@ -24,7 +24,7 @@ public class Cart {
 	private Utente proprietarioCarrello;
 
 	@JoinColumn(name = "id_carrello")
-	@OneToMany //(cascade = CascadeType.ALL)
+	@OneToMany
 	private List<CartDetail> listaSpesa;
 
 	public Long getIdCarrello() {

@@ -3,6 +3,7 @@ package it.objectmethod.e.commerce.entity;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,11 +30,13 @@ public class Ordine {
 	private Date dataOrdine;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "id_utente")
 	private Utente proprietarioOrdine;
 
 	@JsonIgnore
-	@OneToMany
+	@JoinColumn(name = "id_ordine")
+	@OneToMany (cascade = CascadeType.ALL)
 	private List<RigaOrdine> righeOrdine;
 
 	public Integer getIdOrdine() {

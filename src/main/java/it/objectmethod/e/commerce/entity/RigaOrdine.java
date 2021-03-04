@@ -1,6 +1,5 @@
 package it.objectmethod.e.commerce.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "riga_ordine")
 public class RigaOrdine {
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "id_ordine")
 	private Ordine ordine;
 
