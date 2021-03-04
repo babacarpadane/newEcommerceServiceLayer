@@ -18,12 +18,13 @@ public class Cart {
 	@Id
 	@Column(name = "id_carrello")
 	private Long idCarrello;
-	
+
 	@OneToOne
 	@JoinColumn(name = "id_utente", referencedColumnName = "id_utente")
 	private Utente proprietarioCarrello;
-	
-	@OneToMany
+
+	@JoinColumn(name = "id_carrello")
+	@OneToMany //(cascade = CascadeType.ALL)
 	private List<CartDetail> listaSpesa;
 
 	public Long getIdCarrello() {

@@ -1,5 +1,13 @@
 package it.objectmethod.e.commerce.repository;
 
-public interface CartRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import it.objectmethod.e.commerce.entity.Cart;
+
+@Repository
+public interface CartRepository extends JpaRepository<Cart, Long> {
+	public Cart findByProprietarioCarrelloIdUtente (Long idUser);
+
 
 }

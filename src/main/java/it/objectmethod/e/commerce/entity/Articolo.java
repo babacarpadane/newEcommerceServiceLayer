@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "articolo")
 public class Articolo {
@@ -13,7 +15,8 @@ public class Articolo {
 	@Id
 	@Column(name = "id_articolo")
 	private Integer idArticolo;
-
+	
+	@JsonIgnore
 	@Column(name = "disponibilita")
 	private Integer disponibilita;
 
