@@ -2,6 +2,7 @@ package it.objectmethod.e.commerce.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ public class Cart {
 	private Utente proprietarioCarrello;
 
 	@JoinColumn(name = "id_carrello")
-	@OneToMany
+	@OneToMany (cascade = CascadeType.ALL)
 	private List<CartDetail> listaSpesa;
 
 	public Long getIdCarrello() {

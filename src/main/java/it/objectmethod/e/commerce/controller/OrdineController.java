@@ -67,7 +67,7 @@ public class OrdineController {
 				RigaOrdine riga = new RigaOrdine();
 				riga.setArticolo(detail.getArticolo());
 				riga.setQuantita(detail.getQuantita());
-				riga.setOrdine(ordine);
+				//riga.setOrdine(ordine);
 				listaRighe.add(riga);
 			}
 			ordine.setRigheOrdine(listaRighe);

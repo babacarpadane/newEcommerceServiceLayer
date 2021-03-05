@@ -16,88 +16,61 @@ import it.objectmethod.e.commerce.entity.Cart;
 import it.objectmethod.e.commerce.entity.CartDetail;
 import it.objectmethod.e.commerce.entity.Utente;
 import it.objectmethod.e.commerce.repository.ArticoloRepository;
-import it.objectmethod.e.commerce.repository.CartDetailRepository;
 import it.objectmethod.e.commerce.repository.CartRepository;
 import it.objectmethod.e.commerce.repository.UtenteRepository;
 
 @RestController
 @RequestMapping("/api/cart")
-public class CartController {
+public class AddToCartController {
 	@Autowired
 	private ArticoloRepository artRep;
 	@Autowired
 	private UtenteRepository uteRep;
 	@Autowired
 	private CartRepository carRep;
-	@Autowired
-	private CartDetailRepository carDetRep;
 
 	@GetMapping("/aggiungi")
 	public ResponseEntity<Cart> aggiungiProdotto(@RequestParam("qta") Integer qta,
 			@RequestParam("id_art") Integer idArticolo, @RequestParam("user") Long idUtente) {
 		ResponseEntity<Cart> resp = null;
-		Utente user = uteRep.findById(idUtente).get();
 		Optional<Articolo> optArt = artRep.findById(idArticolo);
 
-		if (optArt.isPresent()) {
+		if (optArt.isPresent() && qta > 0) {
+			Utente user = uteRep.findById(idUtente).get();
 			Articolo art = optArt.get();
 			int dispAggiornata = art.getDisponibilita() - qta;
+
 			if (dispAggiornata >= 0) {
+				art.setDisponibilita(dispAggiornata);
+				art = artRep.save(art);
 
 				Cart carrello = carRep.findByProprietarioCarrelloIdUtente(idUtente);
-				boolean existingCart = true;
-				if (carrello == null && qta > 0) {
+				if (carrello == null) {
 					carrello = new Cart();
 					carrello.setProprietarioCarrello(user);
 					carrello.setListaSpesa(new ArrayList<CartDetail>());
-					existingCart = false;
-				} else {
-					if (carrello == null && qta <= 0) {
-						existingCart = false;
-					}
 				}
 
 				boolean detailNotFound = true;
-				if (existingCart) {
+				if (!carrello.getListaSpesa().isEmpty()) {
 					for (CartDetail detailPresente : carrello.getListaSpesa()) {
-						if (detailPresente.getArticolo().getIdArticolo().equals(art.getIdArticolo())
-								&& detailPresente.getQuantita() + qta >= 0) {
+						if (detailPresente.getArticolo().getIdArticolo().equals(art.getIdArticolo())) {
 							detailPresente.setQuantita(detailPresente.getQuantita() + qta);
-							if (detailPresente.getQuantita() == 0) {
-								carDetRep.delete(detailPresente);
-								carrello.getListaSpesa().remove(detailPresente);
-							} else {
-								detailPresente = carDetRep.save(detailPresente);
-							}
 							detailNotFound = false;
-							resp = new ResponseEntity<Cart>(carrello, HttpStatus.OK);
-							art.setDisponibilita(dispAggiornata);
 							break;
 						}
 					}
 				}
 
-				if (detailNotFound && qta > 0) {
+				if (detailNotFound) {
 					CartDetail newDetail = new CartDetail();
 					newDetail.setArticolo(art);
 					newDetail.setQuantita(qta);
-					newDetail = carDetRep.save(newDetail);
 					carrello.getListaSpesa().add(newDetail);
-					resp = new ResponseEntity<Cart>(carrello, HttpStatus.OK);
-					art.setDisponibilita(dispAggiornata);
-				} else {
-					if (detailNotFound && qta <= 0) {
-						resp = new ResponseEntity<Cart>(HttpStatus.BAD_REQUEST);
-					}
 				}
 
-				if (carrello != null && carrello.getListaSpesa().isEmpty()) {
-					carRep.delete(carrello);
-				} else {
-					if (carrello != null) {
-						carrello = carRep.save(carrello);
-					}
-				}
+				carrello = carRep.save(carrello);
+				resp = new ResponseEntity<Cart>(carrello, HttpStatus.OK);
 
 			} else {
 				resp = new ResponseEntity<Cart>(HttpStatus.BAD_REQUEST);

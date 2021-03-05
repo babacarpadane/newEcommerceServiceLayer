@@ -5,36 +5,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "riga_ordine")
 public class RigaOrdine {
-	@ManyToOne
-	@JoinColumn(name = "id_ordine")
-	private Ordine ordine;
-
+	@GeneratedValue
+	@Id
+	@Column(name = "id_riga_ordine")
+	private Long idRigaOrdine;
+	
 	@OneToOne
 	@JoinColumn(name = "id_articolo")
 	private Articolo articolo;
 
 	@Column(name = "quantita")
 	private Integer quantita;
-
-	@GeneratedValue
-	@Id
-	@Column(name = "id_riga_ordine")
-	private Long idRigaOrdine;
-
-	public Ordine getOrdine() {
-		return ordine;
-	}
-
-	public void setOrdine(Ordine ordine) {
-		this.ordine = ordine;
-	}
 
 	public Articolo getArticolo() {
 		return articolo;
