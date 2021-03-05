@@ -57,7 +57,7 @@ public class CartController {
 					}
 				}
 
-				boolean newCart = true;
+				boolean detailNotFound = true;
 				if (existingCart) {
 					for (CartDetail detailPresente : carrello.getListaSpesa()) {
 						if (detailPresente.getArticolo().getIdArticolo().equals(art.getIdArticolo())
@@ -69,7 +69,7 @@ public class CartController {
 							} else {
 								detailPresente = carDetRep.save(detailPresente);
 							}
-							newCart = false;
+							detailNotFound = false;
 							resp = new ResponseEntity<Cart>(carrello, HttpStatus.OK);
 							art.setDisponibilita(dispAggiornata);
 							break;
@@ -77,7 +77,7 @@ public class CartController {
 					}
 				}
 
-				if (newCart && qta > 0) {
+				if (detailNotFound && qta > 0) {
 					CartDetail newDetail = new CartDetail();
 					newDetail.setArticolo(art);
 					newDetail.setQuantita(qta);
@@ -86,7 +86,7 @@ public class CartController {
 					resp = new ResponseEntity<Cart>(carrello, HttpStatus.OK);
 					art.setDisponibilita(dispAggiornata);
 				} else {
-					if (newCart && qta <= 0) {
+					if (detailNotFound && qta <= 0) {
 						resp = new ResponseEntity<Cart>(HttpStatus.BAD_REQUEST);
 					}
 				}
