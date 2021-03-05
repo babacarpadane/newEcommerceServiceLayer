@@ -27,7 +27,7 @@ public class OrdineController {
 	private CartRepository carRep;
 	@Autowired
 	private OrdineRepository ordRep;
-	
+
 	List<String> codeList = new ArrayList<String>();
 
 	@PostMapping("/genera-ordine")
@@ -77,5 +77,4 @@ public class OrdineController {
 		}
 		return resp;
 	}
-
 }

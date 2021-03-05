@@ -52,12 +52,12 @@ public class CartController {
 					carrello.setListaSpesa(new ArrayList<CartDetail>());
 					existingCart = false;
 				} else {
-					if (carrello == null && qta < 0) {
+					if (carrello == null && qta <= 0) {
 						existingCart = false;
 					}
 				}
 
-				boolean detailNotFound = true;
+				boolean newCart = true;
 				if (existingCart) {
 					for (CartDetail detailPresente : carrello.getListaSpesa()) {
 						if (detailPresente.getArticolo().getIdArticolo().equals(art.getIdArticolo())
@@ -69,7 +69,7 @@ public class CartController {
 							} else {
 								detailPresente = carDetRep.save(detailPresente);
 							}
-							detailNotFound = false;
+							newCart = false;
 							resp = new ResponseEntity<Cart>(carrello, HttpStatus.OK);
 							art.setDisponibilita(dispAggiornata);
 							break;
@@ -77,7 +77,7 @@ public class CartController {
 					}
 				}
 
-				if (detailNotFound && qta > 0) {
+				if (newCart && qta > 0) {
 					CartDetail newDetail = new CartDetail();
 					newDetail.setArticolo(art);
 					newDetail.setQuantita(qta);
@@ -86,15 +86,17 @@ public class CartController {
 					resp = new ResponseEntity<Cart>(carrello, HttpStatus.OK);
 					art.setDisponibilita(dispAggiornata);
 				} else {
-					if (detailNotFound && qta < 0) {
+					if (newCart && qta <= 0) {
 						resp = new ResponseEntity<Cart>(HttpStatus.BAD_REQUEST);
 					}
 				}
 
-				if (carrello.getListaSpesa().isEmpty()) {
+				if (carrello != null && carrello.getListaSpesa().isEmpty()) {
 					carRep.delete(carrello);
 				} else {
-					carrello = carRep.save(carrello);
+					if (carrello != null) {
+						carrello = carRep.save(carrello);
+					}
 				}
 
 			} else {
