@@ -3,6 +3,8 @@ package it.objectmethod.e.commerce.controller;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +33,13 @@ public class AddToCartController {
 
 	@GetMapping("/aggiungi")
 	public ResponseEntity<Cart> aggiungiProdotto(@RequestParam("qta") Integer qta,
-			@RequestParam("id_art") Integer idArticolo, @RequestParam("user") Long idUtente) {
+			@RequestParam("id_art") Integer idArticolo, HttpServletRequest req) {
 		ResponseEntity<Cart> resp = null;
 		Optional<Articolo> optArt = artRep.findById(idArticolo);
 
 		if (optArt.isPresent() && qta > 0) {
-			Utente user = uteRep.findById(idUtente).get();
+			String nomeUtente = req.getAttribute("nomeUtente").toString();
+			Utente user = uteRep.findByNomeUtente(nomeUtente).get();
 			Articolo art = optArt.get();
 			int dispAggiornata = art.getDisponibilita() - qta;
 
@@ -44,7 +47,7 @@ public class AddToCartController {
 				art.setDisponibilita(dispAggiornata);
 				art = artRep.save(art);
 
-				Cart carrello = carRep.findByProprietarioCarrelloIdUtente(idUtente);
+				Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
 				if (carrello == null) {
 					carrello = new Cart();
 					carrello.setProprietarioCarrello(user);

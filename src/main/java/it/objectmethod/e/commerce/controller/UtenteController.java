@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.objectmethod.e.commerce.controller.service.JWTService;
 import it.objectmethod.e.commerce.entity.Utente;
 import it.objectmethod.e.commerce.repository.UtenteRepository;
 
@@ -14,11 +15,14 @@ import it.objectmethod.e.commerce.repository.UtenteRepository;
 public class UtenteController {
 	@Autowired
 	private UtenteRepository repUtente;
+	@Autowired
+	private JWTService jwtSer;
 
 	@GetMapping("/login")
-	public Utente login(@RequestParam("username") String username, @RequestParam("password") String password) {
+	public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
 		Utente utenteLoggato = repUtente.findByNomeUtenteAndPassword(username, password);
-		return utenteLoggato;
+		String token = jwtSer.generateJWTToken(utenteLoggato);
+		System.out.println("Token: " + token);
+		return token;
 	}
-
 }
