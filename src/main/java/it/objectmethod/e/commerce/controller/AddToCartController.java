@@ -31,7 +31,7 @@ public class AddToCartController {
 	@Autowired
 	private CartRepository carRep;
 
-	@GetMapping("/aggiungi")
+	@GetMapping("/add")
 	public ResponseEntity<Cart> aggiungiProdotto(@RequestParam("qta") Integer qta,
 			@RequestParam("id_art") Integer idArticolo, HttpServletRequest req) {
 		ResponseEntity<Cart> resp = null;

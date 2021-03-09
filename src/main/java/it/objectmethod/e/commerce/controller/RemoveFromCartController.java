@@ -24,7 +24,7 @@ public class RemoveFromCartController {
 	@Autowired
 	private CartRepository carRep;
 
-	@GetMapping("/rimuovi")
+	@GetMapping("/remove")
 	public ResponseEntity<Cart> rimuoviProdotto(@RequestParam("id_art") Integer idArticolo, HttpServletRequest req) {
 		ResponseEntity<Cart> resp = null;
 		Articolo art = artRep.findById(idArticolo).get();
