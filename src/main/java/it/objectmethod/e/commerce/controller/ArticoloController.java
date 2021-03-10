@@ -1,9 +1,10 @@
 package it.objectmethod.e.commerce.controller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,10 +20,15 @@ public class ArticoloController {
 	private ArticoloRepository repArticolo;
 
 	@GetMapping("/trova-articoli")
-	public List<Articolo> findArticoliByNameOrCode(@RequestParam("name") String name,
+	public ResponseEntity<ArrayList<Articolo>> findArticoliByNameOrCode(@RequestParam("name") String name,
 			@RequestParam("codiceArticolo") String codiceArticolo) {
-		ArrayList<Articolo> articoliTrovato = repArticolo.trovaArticoli(name, codiceArticolo);
-		return articoliTrovato;
+		ResponseEntity<ArrayList<Articolo>> resp = null;
+		ArrayList<Articolo> articoliTrovati = repArticolo.trovaArticoli(name, codiceArticolo);
+		if (!articoliTrovati.isEmpty()) {
+			resp = new ResponseEntity<ArrayList<Articolo>>(articoliTrovati, HttpStatus.OK);
+		} else {
+			resp = new ResponseEntity<ArrayList<Articolo>>(HttpStatus.BAD_REQUEST);
+		}
+		return resp;
 	}
-
 }
