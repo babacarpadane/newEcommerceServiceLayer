@@ -23,6 +23,7 @@ public class JWTService {
 				.withClaim("password", utente.getPassword())
 				.withExpiresAt(expirationTime)
 				.sign(alg);
+		System.out.println(token);
 		return token;
 	}
 

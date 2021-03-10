@@ -19,10 +19,10 @@ public class UtenteController {
 	private JWTService jwtSer;
 
 	@GetMapping("/login")
-	public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
+	public Utente login(@RequestParam("username") String username, @RequestParam("password") String password) {
 		Utente utenteLoggato = repUtente.findByNomeUtenteAndPassword(username, password);
 		String token = jwtSer.generateJWTToken(utenteLoggato);
 		System.out.println("Token: " + token);
-		return token;
+		return utenteLoggato;
 	}
 }
