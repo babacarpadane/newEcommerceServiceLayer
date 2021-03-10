@@ -34,8 +34,8 @@ public class AutentFilter implements Filter {
 			String token = req.getHeader("headerName");	
 			if (token != null) {		
 				if (jwtSer.verifyToken(token)) {
-					String set = jwtSer.getUsername(token); 
-					req.setAttribute("nomeUtente", set);
+					String usernameToSet = jwtSer.getUsername(token); 
+					req.setAttribute("nomeUtente", usernameToSet);
 					chain.doFilter(request, response);
 				} else {
 					System.out.println("Token scaduto");
