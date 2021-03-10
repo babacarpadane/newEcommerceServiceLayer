@@ -7,5 +7,5 @@ import it.objectmethod.e.commerce.entity.RigaOrdine;
 
 @Repository
 public interface RigaOrdineRepository extends JpaRepository<RigaOrdine, Long>{
-
+	//QUESTA REPOSITORY NON È MAI USATA
 }
