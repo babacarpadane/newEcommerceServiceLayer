@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.objectmethod.e.commerce.repository.CartRepository;
 import it.objectmethod.e.commerce.repository.OrdineRepository;
-import it.objectmethod.e.commerce.controller.service.JWTService;
 import it.objectmethod.e.commerce.entity.Cart;
 import it.objectmethod.e.commerce.entity.CartDetail;
 import it.objectmethod.e.commerce.entity.Ordine;
@@ -29,25 +28,20 @@ public class OrdineController {
 	private CartRepository carRep;
 	@Autowired
 	private OrdineRepository ordRep;
-	@Autowired
-	private JWTService jwtSer;
 
 	@PostMapping("/genera-ordine")
-	public ResponseEntity<Ordine> stampaOrdine(HttpServletRequest req) {
-		String token = req.getHeader("headerName");
-		String nomeUtente = jwtSer.getUsername(token);
+	public ResponseEntity<Ordine> stampaOrdine(HttpServletRequest req /* , @RequestHeader("headerName") String token */) {
 		ResponseEntity<Ordine> resp = null;
+//		String nomeUtente = jwtSer.getUsername(token);
+		String nomeUtente = req.getAttribute("nomeUtente").toString();
 		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
-		if (carrello == null) {
-			resp = new ResponseEntity<Ordine>(HttpStatus.BAD_REQUEST);
-		} else {
+		if (carrello != null && !carrello.getListaSpesa().isEmpty()) {
 			Ordine ordine = new Ordine();
 
 			String code = ordRep.findLastNumeroOrdine();
 			String ch = code.substring(0, 1);
 			int num = Integer.parseInt(code.substring(1)) + 1;
 			String formattedNum = String.format("%06d", num);
-			
 			ordine.setNumeroOrdine(ch.concat(formattedNum));
 			ordine.setProprietarioOrdine(carrello.getProprietarioCarrello());
 			Date data = Date.valueOf(LocalDate.now());
@@ -62,8 +56,9 @@ public class OrdineController {
 			}
 			ordine.setRigheOrdine(listaRighe);
 			ordine = ordRep.save(ordine);
-
 			resp = new ResponseEntity<Ordine>(ordine, HttpStatus.OK);
+		} else {
+			resp = new ResponseEntity<Ordine>(HttpStatus.BAD_REQUEST);
 		}
 		return resp;
 	}

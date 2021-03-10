@@ -18,41 +18,32 @@ public class JWTService {
 	public String generateJWTToken(Utente utente) {
 		Algorithm alg = Algorithm.HMAC256(JWT_KEY);
 		Date expirationTime = new Date(System.currentTimeMillis() + 3600000);
-		String token = JWT.create()
-				.withClaim("username", utente.getNomeUtente())
-				.withClaim("password", utente.getPassword())
-				.withExpiresAt(expirationTime)
-				.sign(alg);
-		System.out.println(token);
+		// (Date.from(ZonedDateTime.now().plusDays(1).toInstant()))
+		String token = JWT.create().withClaim("username", utente.getNomeUtente())
+				.withClaim("password", utente.getPassword()).withExpiresAt(expirationTime).sign(alg);
 		return token;
 	}
 
-	@SuppressWarnings("unused")
 	public boolean verifyToken(String token) {
 		boolean valid = false;
 		Algorithm alg = Algorithm.HMAC256(JWT_KEY);
 		try {
 			JWTVerifier verify = JWT.require(alg).build();
+			@SuppressWarnings("unused")
 			DecodedJWT decode = verify.verify(token);
-			String username = decode.getClaim("username").asString();
-			String password = decode.getClaim("password").asString();
 			valid = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return valid;
 	}
-	
+
 	public String getUsername(String token) {
-		String username = new String();
 		Algorithm alg = Algorithm.HMAC256(JWT_KEY);
-		try {
-			JWTVerifier verify = JWT.require(alg).build();
-			DecodedJWT decode = verify.verify(token);
-			username = decode.getClaim("username").asString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		JWTVerifier verify = JWT.require(alg).build();
+		DecodedJWT decode = verify.verify(token);
+		String username = decode.getClaim("username").asString();
+
 		return username;
 	}
 }

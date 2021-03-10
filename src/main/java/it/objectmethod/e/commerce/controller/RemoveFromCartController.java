@@ -30,8 +30,8 @@ public class RemoveFromCartController {
 		Articolo art = artRep.findById(idArticolo).get();
 		String nomeUtente = req.getAttribute("nomeUtente").toString();
 		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
-		
-		if (carrello != null  && !carrello.getListaSpesa().isEmpty() && art != null) {
+
+		if (carrello != null && !carrello.getListaSpesa().isEmpty() && art != null) {
 			for (CartDetail detail : carrello.getListaSpesa()) {
 				if (detail.getArticolo().getIdArticolo().equals(art.getIdArticolo())) {
 					art.setDisponibilita(art.getDisponibilita() + detail.getQuantita());
@@ -44,8 +44,6 @@ public class RemoveFromCartController {
 		} else {
 			resp = new ResponseEntity<Cart>(HttpStatus.BAD_REQUEST);
 		}
-
 		return resp;
 	}
-
 }

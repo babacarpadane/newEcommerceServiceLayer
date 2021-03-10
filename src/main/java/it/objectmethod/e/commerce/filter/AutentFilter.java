@@ -31,10 +31,10 @@ public class AutentFilter implements Filter {
 		if (url.endsWith("login")) {
 			chain.doFilter(request, response);
 		} else {
-			String token = req.getHeader("headerName");	
-			if (token != null) {		
+			String token = req.getHeader("headerName");
+			if (token != null) {
 				if (jwtSer.verifyToken(token)) {
-					String usernameToSet = jwtSer.getUsername(token); 
+					String usernameToSet = jwtSer.getUsername(token);
 					req.setAttribute("nomeUtente", usernameToSet);
 					chain.doFilter(request, response);
 				} else {

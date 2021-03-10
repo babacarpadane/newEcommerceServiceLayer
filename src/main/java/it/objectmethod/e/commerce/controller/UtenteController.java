@@ -1,6 +1,8 @@
 package it.objectmethod.e.commerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,10 +21,17 @@ public class UtenteController {
 	private JWTService jwtSer;
 
 	@GetMapping("/login")
-	public Utente login(@RequestParam("username") String username, @RequestParam("password") String password) {
+	public ResponseEntity<Utente> login(@RequestParam("username") String username,
+			@RequestParam("password") String password) {
+		ResponseEntity<Utente> resp = null;
 		Utente utenteLoggato = repUtente.findByNomeUtenteAndPassword(username, password);
-		String token = jwtSer.generateJWTToken(utenteLoggato);
-		System.out.println("Token: " + token);
-		return utenteLoggato;
+		if (utenteLoggato != null) {
+			String token = jwtSer.generateJWTToken(utenteLoggato);
+			System.out.println("Token: " + token);
+			resp = new ResponseEntity<Utente>(utenteLoggato, HttpStatus.OK);
+		} else {
+			resp = new ResponseEntity<Utente>(HttpStatus.BAD_REQUEST);
+		}
+		return resp;
 	}
 }
