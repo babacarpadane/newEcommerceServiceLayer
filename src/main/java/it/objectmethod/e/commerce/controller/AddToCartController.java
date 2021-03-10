@@ -33,7 +33,7 @@ public class AddToCartController {
 
 	@GetMapping("/add")
 	public ResponseEntity<Cart> aggiungiProdotto(@RequestParam("qta") Integer qta,
-			@RequestParam("id_art") Integer idArticolo, HttpServletRequest req) {
+			@RequestParam("id_art") Integer idArticolo, HttpServletRequest req /*, @RequestHeader String token*/) {
 		ResponseEntity<Cart> resp = null;
 		Optional<Articolo> optArt = artRep.findById(idArticolo);
 
