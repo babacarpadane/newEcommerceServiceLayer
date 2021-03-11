@@ -29,8 +29,7 @@ public class JWTService {
 		Algorithm alg = Algorithm.HMAC256(JWT_KEY);
 		try {
 			JWTVerifier verify = JWT.require(alg).build();
-			@SuppressWarnings("unused")
-			DecodedJWT decode = verify.verify(token);
+			verify.verify(token);
 			valid = true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,8 +40,8 @@ public class JWTService {
 	public String getUsername(String token) {
 		Algorithm alg = Algorithm.HMAC256(JWT_KEY);
 		JWTVerifier verify = JWT.require(alg).build();
-		DecodedJWT decode = verify.verify(token);
-		String username = decode.getClaim("username").asString();
+		DecodedJWT decodedToken = verify.verify(token);
+		String username = decodedToken.getClaim("username").asString();
 
 		return username;
 	}

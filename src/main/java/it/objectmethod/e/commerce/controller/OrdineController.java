@@ -5,17 +5,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.objectmethod.e.commerce.repository.CartRepository;
 import it.objectmethod.e.commerce.repository.OrdineRepository;
+import it.objectmethod.e.commerce.controller.service.JWTService;
 import it.objectmethod.e.commerce.entity.Cart;
 import it.objectmethod.e.commerce.entity.CartDetail;
 import it.objectmethod.e.commerce.entity.Ordine;
@@ -28,12 +28,13 @@ public class OrdineController {
 	private CartRepository carRep;
 	@Autowired
 	private OrdineRepository ordRep;
+	@Autowired
+	private JWTService jwtSer;
 
 	@PostMapping("/genera-ordine")
-	public ResponseEntity<Ordine> stampaOrdine(HttpServletRequest req /* , @RequestHeader("headerName") String token */) {
+	public ResponseEntity<Ordine> stampaOrdine(@RequestHeader("authentificationToken") String token) {
 		ResponseEntity<Ordine> resp = null;
-//		String nomeUtente = jwtSer.getUsername(token);
-		String nomeUtente = req.getAttribute("nomeUtente").toString();
+		String nomeUtente = jwtSer.getUsername(token);
 		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
 		if (carrello != null && !carrello.getListaSpesa().isEmpty()) {
 			Ordine ordine = new Ordine();
