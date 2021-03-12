@@ -39,11 +39,18 @@ public class OrdineController {
 		if (carrello != null && !carrello.getListaSpesa().isEmpty()) {
 			Ordine ordine = new Ordine();
 
-			String code = ordRep.findLastNumeroOrdine();
-			String ch = code.substring(0, 1);
-			int num = Integer.parseInt(code.substring(1)) + 1;
-			String formattedNum = String.format("%06d", num);
-			ordine.setNumeroOrdine(ch.concat(formattedNum));
+			String codeForNewOrder = null;
+			try {
+				String code = ordRep.findLastNumeroOrdine();
+				String ch = code.substring(0, 1);
+				int num = Integer.parseInt(code.substring(1)) + 1;
+				String formattedNum = String.format("%06d", num);
+				codeForNewOrder = ch.concat(formattedNum);
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+				codeForNewOrder = "A000000";
+			}
+			ordine.setNumeroOrdine(codeForNewOrder);
 			ordine.setProprietarioOrdine(carrello.getProprietarioCarrello());
 			Date data = Date.valueOf(LocalDate.now());
 			ordine.setDataOrdine(data);
@@ -57,6 +64,8 @@ public class OrdineController {
 			}
 			ordine.setRigheOrdine(listaRighe);
 			ordine = ordRep.save(ordine);
+			carrello.getListaSpesa().removeAll(carrello.getListaSpesa());
+			carrello = carRep.save(carrello);
 			resp = new ResponseEntity<Ordine>(ordine, HttpStatus.OK);
 		} else {
 			resp = new ResponseEntity<Ordine>(HttpStatus.BAD_REQUEST);
