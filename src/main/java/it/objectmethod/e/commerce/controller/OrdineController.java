@@ -34,7 +34,7 @@ public class OrdineController {
 	@PostMapping("/genera-ordine")
 	public ResponseEntity<Ordine> stampaOrdine(@RequestHeader("authentificationToken") String token) {
 		ResponseEntity<Ordine> resp = null;
-		String nomeUtente = jwtSer.getUsername(token);
+		String nomeUtente = jwtSer.getUsername(token); //si prende il token da solo
 		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
 		if (carrello != null && !carrello.getListaSpesa().isEmpty()) {
 			Ordine ordine = new Ordine();
