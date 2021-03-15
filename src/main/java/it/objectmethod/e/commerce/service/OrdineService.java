@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import it.objectmethod.e.commerce.entity.Cart;
 import it.objectmethod.e.commerce.entity.CartDetail;
@@ -28,12 +27,9 @@ public class OrdineService {
 	private OrdineRepository ordRep;
 	@Autowired
 	private OrdineMapper ordMap;
-	@Autowired
-	private JWTService jwtSer;
 
-	public ResponseEntity<OrdineDTO> generaOrdine(String token) {
+	public ResponseEntity<OrdineDTO> generaOrdine(String nomeUtente) {
 		ResponseEntity<OrdineDTO> resp = null;
-		String nomeUtente = jwtSer.getUsername(token); // si prende il token da solo
 		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
 		if (carrello != null && !carrello.getListaSpesa().isEmpty()) {
 			Ordine ordine = new Ordine();

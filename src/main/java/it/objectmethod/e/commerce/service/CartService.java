@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import it.objectmethod.e.commerce.entity.Articolo;
 import it.objectmethod.e.commerce.entity.Cart;
@@ -30,15 +28,12 @@ public class CartService {
 	private CartMapper carMap;
 	@Autowired
 	private ArticoloRepository artRep;
-	@Autowired
-	private JWTService jwtSer;
 
-	public ResponseEntity<CartDTO> aggiungiProdotto(Integer qta, Integer idArticolo, String token) {
+	public ResponseEntity<CartDTO> aggiungiProdotto(Integer qta, Integer idArticolo, String nomeUtente) {
 		ResponseEntity<CartDTO> resp = null;
 		Optional<Articolo> optArt = artRep.findById(idArticolo);
 
 		if (optArt.isPresent() && qta > 0) {
-			String nomeUtente = jwtSer.getUsername(token);
 			Utente user = uteRep.findByNomeUtente(nomeUtente).get();
 			Articolo art = optArt.get();
 			int dispAggiornata = art.getDisponibilita() - qta;
@@ -87,10 +82,9 @@ public class CartService {
 		return resp;
 	}
 
-	public ResponseEntity<CartDTO> rimuoviProdotto(Integer idArticolo, String token) {
+	public ResponseEntity<CartDTO> rimuoviProdotto(Integer idArticolo, String nomeUtente) {
 		ResponseEntity<CartDTO> resp = null;
 		Articolo art = artRep.findById(idArticolo).get();
-		String nomeUtente = jwtSer.getUsername(token);
 		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
 
 		if (carrello != null && !carrello.getListaSpesa().isEmpty() && art != null) {

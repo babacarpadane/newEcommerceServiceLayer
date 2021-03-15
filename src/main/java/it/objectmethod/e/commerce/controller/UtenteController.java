@@ -1,7 +1,6 @@
 package it.objectmethod.e.commerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,18 +12,24 @@ import it.objectmethod.e.commerce.repository.UtenteRepository;
 import it.objectmethod.e.commerce.service.JWTService;
 import it.objectmethod.e.commerce.service.UtenteService;
 import it.objectmethod.e.commerce.service.dto.UtenteDTO;
-import it.objectmethod.e.commerce.service.mapper.UtenteMapper;
 
 @RestController
 @RequestMapping("/api/utente")
 public class UtenteController {
 	@Autowired
 	private UtenteService uteSer;
+	@Autowired
+	private JWTService jwtSer;
+	@Autowired
+	private UtenteRepository repUtente;
 
 	@GetMapping("/login")
 	public ResponseEntity<UtenteDTO> login(@RequestParam("username") String username,
 			@RequestParam("password") String password) {
-		ResponseEntity<UtenteDTO> resp = uteSer.login(username, password);
+		Utente utenteLoggato = repUtente.findByNomeUtenteAndPassword(username, password);
+		ResponseEntity<UtenteDTO> resp = uteSer.login(utenteLoggato);
+		String token = jwtSer.generateJWTToken(utenteLoggato);
+		System.out.println("Token: " + token);
 		return resp;
 	}
 }

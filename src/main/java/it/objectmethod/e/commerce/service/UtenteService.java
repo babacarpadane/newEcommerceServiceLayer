@@ -13,19 +13,12 @@ import it.objectmethod.e.commerce.service.mapper.UtenteMapper;
 @Component
 public class UtenteService {
 	@Autowired
-	private UtenteRepository repUtente;
-	@Autowired
 	private UtenteMapper uteMap;
-	@Autowired
-	private JWTService jwtSer;
 
-	public ResponseEntity<UtenteDTO> login(String username, String password) {
+	public ResponseEntity<UtenteDTO> login(Utente utenteLoggato) {
 		ResponseEntity<UtenteDTO> resp = null;
-		Utente utenteLoggato = repUtente.findByNomeUtenteAndPassword(username, password);
 		if (utenteLoggato != null) {
-			String token = jwtSer.generateJWTToken(utenteLoggato);
 			UtenteDTO utenteLoggatoDto = uteMap.toDto(utenteLoggato);
-			System.out.println("Token: " + token);
 			resp = new ResponseEntity<UtenteDTO>(utenteLoggatoDto, HttpStatus.OK);
 		} else {
 			resp = new ResponseEntity<UtenteDTO>(HttpStatus.BAD_REQUEST);
