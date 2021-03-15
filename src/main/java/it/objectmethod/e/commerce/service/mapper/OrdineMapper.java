@@ -1,16 +1,16 @@
-package it.objectmethod.e.commerce.controller.service.mapper;
+package it.objectmethod.e.commerce.service.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import it.objectmethod.e.commerce.controller.service.dto.OrdineDTO;
 import it.objectmethod.e.commerce.entity.Ordine;
+import it.objectmethod.e.commerce.service.dto.OrdineDTO;
 
 @Mapper(componentModel = "spring")
 public interface OrdineMapper extends Entitymapper<OrdineDTO, Ordine> {
 	@Override
-	@Mapping(source = "utente.idUtente", target = "idUtente")
-	@Mapping(source = "utente.nomeUtente", target = "nomeUtente")
+	@Mapping(source = "proprietarioOrdine.idUtente", target = "idUtente")
+	@Mapping(source = "proprietarioOrdine.nomeUtente", target = "nomeUtente")
 	OrdineDTO toDto(Ordine entity);
 
 	@Override

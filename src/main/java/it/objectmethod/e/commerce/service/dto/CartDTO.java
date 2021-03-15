@@ -1,4 +1,4 @@
-package it.objectmethod.e.commerce.controller.service.dto;
+package it.objectmethod.e.commerce.service.dto;
 
 public class CartDTO {
 

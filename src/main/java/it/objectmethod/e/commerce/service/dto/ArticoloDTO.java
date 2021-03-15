@@ -1,31 +1,24 @@
-package it.objectmethod.e.commerce.controller.service.dto;
+package it.objectmethod.e.commerce.service.dto;
 
-public class CartDetailDTO {
+public class ArticoloDTO {
 	
-	private Long idCarrelloDettaglio;
-	private Integer quantita;
 	private Integer idArticolo;
+	private Integer disponibilita;
 	private String codiceArticolo;
 	private String nomeArticolo;
-	//private ArticoloDTO articolo;
+	private Double prezzoUnitario;
 	
-	public Long getIdCarrelloDettaglio() {
-		return idCarrelloDettaglio;
-	}
-	public void setIdCarrelloDettaglio(Long idCarrelloDettaglio) {
-		this.idCarrelloDettaglio = idCarrelloDettaglio;
-	}
-	public Integer getQuantita() {
-		return quantita;
-	}
-	public void setQuantita(Integer quantita) {
-		this.quantita = quantita;
-	}
 	public Integer getIdArticolo() {
 		return idArticolo;
 	}
 	public void setIdArticolo(Integer idArticolo) {
 		this.idArticolo = idArticolo;
+	}
+	public Integer getDisponibilita() {
+		return disponibilita;
+	}
+	public void setDisponibilita(Integer disponibilita) {
+		this.disponibilita = disponibilita;
 	}
 	public String getCodiceArticolo() {
 		return codiceArticolo;
@@ -39,6 +32,11 @@ public class CartDetailDTO {
 	public void setNomeArticolo(String nomeArticolo) {
 		this.nomeArticolo = nomeArticolo;
 	}
-
+	public Double getPrezzoUnitario() {
+		return prezzoUnitario;
+	}
+	public void setPrezzoUnitario(Double prezzoUnitario) {
+		this.prezzoUnitario = prezzoUnitario;
+	}
 	
 }

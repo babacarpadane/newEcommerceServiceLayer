@@ -1,4 +1,4 @@
-package it.objectmethod.e.commerce.controller.service;
+package it.objectmethod.e.commerce.service;
 
 import java.util.Date;
 

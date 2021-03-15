@@ -7,5 +7,4 @@ import it.objectmethod.e.commerce.entity.CartDetail;
 
 @Repository
 public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
-	//QUESTA REPOSITORY NON È MAI USATA
 }

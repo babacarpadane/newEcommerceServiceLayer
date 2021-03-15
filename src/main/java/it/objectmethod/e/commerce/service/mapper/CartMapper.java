@@ -1,16 +1,16 @@
-package it.objectmethod.e.commerce.controller.service.mapper;
+package it.objectmethod.e.commerce.service.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import it.objectmethod.e.commerce.controller.service.dto.CartDTO;
 import it.objectmethod.e.commerce.entity.Cart;
+import it.objectmethod.e.commerce.service.dto.CartDTO;
 
 @Mapper(componentModel = "spring")
 public interface CartMapper extends Entitymapper<CartDTO, Cart> {
 	@Override
-	@Mapping(source = "utente.idUtente", target = "idUtente")
-	@Mapping(source = "utente.nomeUtente", target = "nomeUtente")
+	@Mapping(source = "proprietarioCarrello.idUtente", target = "idUtente")
+	@Mapping(source = "proprietarioCarrello.nomeUtente", target = "nomeUtente")
 	CartDTO toDto(Cart entity);
 
 	@Override

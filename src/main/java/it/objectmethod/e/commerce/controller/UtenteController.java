@@ -8,30 +8,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.objectmethod.e.commerce.controller.service.JWTService;
 import it.objectmethod.e.commerce.entity.Utente;
 import it.objectmethod.e.commerce.repository.UtenteRepository;
+import it.objectmethod.e.commerce.service.JWTService;
+import it.objectmethod.e.commerce.service.UtenteService;
+import it.objectmethod.e.commerce.service.dto.UtenteDTO;
+import it.objectmethod.e.commerce.service.mapper.UtenteMapper;
 
 @RestController
 @RequestMapping("/api/utente")
 public class UtenteController {
 	@Autowired
-	private UtenteRepository repUtente;
-	@Autowired
-	private JWTService jwtSer;
+	private UtenteService uteSer;
 
 	@GetMapping("/login")
-	public ResponseEntity<Utente> login(@RequestParam("username") String username,
+	public ResponseEntity<UtenteDTO> login(@RequestParam("username") String username,
 			@RequestParam("password") String password) {
-		ResponseEntity<Utente> resp = null;
-		Utente utenteLoggato = repUtente.findByNomeUtenteAndPassword(username, password);
-		if (utenteLoggato != null) {
-			String token = jwtSer.generateJWTToken(utenteLoggato);
-			System.out.println("Token: " + token);
-			resp = new ResponseEntity<Utente>(utenteLoggato, HttpStatus.OK);
-		} else {
-			resp = new ResponseEntity<Utente>(HttpStatus.BAD_REQUEST);
-		}
+		ResponseEntity<UtenteDTO> resp = uteSer.login(username, password);
 		return resp;
 	}
 }

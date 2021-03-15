@@ -1,34 +1,27 @@
 package it.objectmethod.e.commerce.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.objectmethod.e.commerce.entity.Articolo;
-import it.objectmethod.e.commerce.repository.ArticoloRepository;
+import it.objectmethod.e.commerce.service.ArticoloService;
+import it.objectmethod.e.commerce.service.dto.ArticoloDTO;
 
 @RestController
 @RequestMapping("/api/articolo")
 public class ArticoloController {
 	@Autowired
-	private ArticoloRepository repArticolo;
+	private ArticoloService artSer;
 
 	@GetMapping("/trova-articoli")
-	public ResponseEntity<ArrayList<Articolo>> findArticoliByNameOrCode(@RequestParam("name") String name,
+	public ResponseEntity<List<ArticoloDTO>> findArticoliByNameOrCode(@RequestParam("name") String name,
 			@RequestParam("codiceArticolo") String codiceArticolo) {
-		ResponseEntity<ArrayList<Articolo>> resp = null;
-		ArrayList<Articolo> articoliTrovati = repArticolo.trovaArticoli(name, codiceArticolo);
-		if (!articoliTrovati.isEmpty()) {
-			resp = new ResponseEntity<ArrayList<Articolo>>(articoliTrovati, HttpStatus.OK);
-		} else {
-			resp = new ResponseEntity<ArrayList<Articolo>>(HttpStatus.BAD_REQUEST);
-		}
+		ResponseEntity<List<ArticoloDTO>> resp = artSer.findArticoliByNameOrCode(name, codiceArticolo);
 		return resp;
 	}
 }

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import it.objectmethod.e.commerce.controller.service.JWTService;
+import it.objectmethod.e.commerce.service.JWTService;
 
 @Component
 public class AutentFilter implements Filter {

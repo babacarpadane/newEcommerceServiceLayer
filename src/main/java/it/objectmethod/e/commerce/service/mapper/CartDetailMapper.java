@@ -1,20 +1,21 @@
-package it.objectmethod.e.commerce.controller.service.mapper;
+package it.objectmethod.e.commerce.service.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import it.objectmethod.e.commerce.controller.service.dto.RigaOrdineDTO;
-import it.objectmethod.e.commerce.entity.RigaOrdine;
+import it.objectmethod.e.commerce.entity.CartDetail;
+import it.objectmethod.e.commerce.service.dto.CartDetailDTO;
 
 @Mapper(componentModel = "spring")
-public interface RigaOrdineMapper extends Entitymapper<RigaOrdineDTO, RigaOrdine> {
+public interface CartDetailMapper extends Entitymapper<CartDetailDTO, CartDetail> {
 	@Override
 	@Mapping(source = "articolo.idArticolo", target = "idArticolo")
 	@Mapping(source = "articolo.codiceArticolo", target = "codiceArticolo")
 	@Mapping(source = "articolo.nomeArticolo", target = "nomeArticolo")
-	RigaOrdineDTO toDto(RigaOrdine entity);
+	CartDetailDTO toDto(CartDetail entity); 
 
 	@Override
 	@Mapping(target = "articolo", ignore = true)
-	RigaOrdine toEntity(RigaOrdineDTO dto);
+	CartDetail toEntity(CartDetailDTO dto);
+
 }

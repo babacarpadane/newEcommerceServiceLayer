@@ -1,4 +1,4 @@
-package it.objectmethod.e.commerce.controller.service.mapper;
+package it.objectmethod.e.commerce.service.mapper;
 
 import java.util.List;
 
