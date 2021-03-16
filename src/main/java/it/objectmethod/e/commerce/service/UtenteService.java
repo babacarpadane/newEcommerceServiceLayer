@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import it.objectmethod.e.commerce.entity.Utente;
-import it.objectmethod.e.commerce.repository.UtenteRepository;
 import it.objectmethod.e.commerce.service.dto.UtenteDTO;
 import it.objectmethod.e.commerce.service.mapper.UtenteMapper;
 
@@ -17,12 +16,9 @@ public class UtenteService {
 
 	public ResponseEntity<UtenteDTO> login(Utente utenteLoggato) {
 		ResponseEntity<UtenteDTO> resp = null;
-		if (utenteLoggato != null) {
-			UtenteDTO utenteLoggatoDto = uteMap.toDto(utenteLoggato);
-			resp = new ResponseEntity<UtenteDTO>(utenteLoggatoDto, HttpStatus.OK);
-		} else {
-			resp = new ResponseEntity<UtenteDTO>(HttpStatus.BAD_REQUEST);
-		}
+		UtenteDTO utenteLoggatoDto = uteMap.toDto(utenteLoggato);
+		resp = new ResponseEntity<UtenteDTO>(utenteLoggatoDto, HttpStatus.OK);
+
 		return resp;
 	}
 }

@@ -1,6 +1,7 @@
 package it.objectmethod.e.commerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +27,15 @@ public class UtenteController {
 	@GetMapping("/login")
 	public ResponseEntity<UtenteDTO> login(@RequestParam("username") String username,
 			@RequestParam("password") String password) {
+		ResponseEntity<UtenteDTO> resp = null;
 		Utente utenteLoggato = repUtente.findByNomeUtenteAndPassword(username, password);
-		ResponseEntity<UtenteDTO> resp = uteSer.login(utenteLoggato);
-		String token = jwtSer.generateJWTToken(utenteLoggato);
-		System.out.println("Token: " + token);
+		if (utenteLoggato != null) {
+			resp = uteSer.login(utenteLoggato);
+			String token = jwtSer.generateJWTToken(utenteLoggato);
+			System.out.println("Token: " + token);
+		} else {
+			resp = new ResponseEntity<UtenteDTO>(HttpStatus.BAD_REQUEST);
+		}
 		return resp;
 	}
 }
