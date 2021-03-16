@@ -36,7 +36,7 @@ public class Ordine {
 
 	@JsonIgnore
 	@JoinColumn(name = "id_ordine")
-	@OneToMany (cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<RigaOrdine> righeOrdine;
 
 	public Integer getIdOrdine() {

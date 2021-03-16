@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import it.objectmethod.e.commerce.entity.Ordine;
 import it.objectmethod.e.commerce.service.dto.OrdineDTO;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { RigaOrdineMapper.class })
 public interface OrdineMapper extends Entitymapper<OrdineDTO, Ordine> {
 	@Override
 	@Mapping(source = "proprietarioOrdine.idUtente", target = "idUtente")
@@ -15,6 +15,5 @@ public interface OrdineMapper extends Entitymapper<OrdineDTO, Ordine> {
 
 	@Override
 	@Mapping(target = "proprietarioOrdine", ignore = true)
-	@Mapping(target = "righeOrdine", ignore = true)
 	Ordine toEntity(OrdineDTO dto);
 }
