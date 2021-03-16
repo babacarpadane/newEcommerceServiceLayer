@@ -4,7 +4,6 @@ public class UtenteDTO {
 	
 	private Long idUtente;
 	private String nomeUtente;
-	//private List<OrdineDTO> ordiniDellUtente;
 
 	public Long getIdUtente() {
 		return idUtente;

@@ -1,7 +1,6 @@
 package it.objectmethod.e.commerce.service.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import it.objectmethod.e.commerce.entity.Utente;
 import it.objectmethod.e.commerce.service.dto.UtenteDTO;
@@ -12,6 +11,5 @@ public interface UtenteMapper extends Entitymapper<UtenteDTO, Utente> {
 	UtenteDTO toDto(Utente entity);
 
 	@Override
-	@Mapping(target = "password", ignore = true)
 	Utente toEntity(UtenteDTO dto);
 }

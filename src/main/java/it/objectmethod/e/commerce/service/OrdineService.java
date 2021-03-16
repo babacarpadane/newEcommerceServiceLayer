@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import it.objectmethod.e.commerce.entity.Cart;
 import it.objectmethod.e.commerce.entity.CartDetail;
@@ -19,7 +17,7 @@ import it.objectmethod.e.commerce.repository.OrdineRepository;
 import it.objectmethod.e.commerce.service.dto.OrdineDTO;
 import it.objectmethod.e.commerce.service.mapper.OrdineMapper;
 
-@Component
+@Service
 public class OrdineService {
 	@Autowired
 	private CartRepository carRep;
@@ -28,8 +26,8 @@ public class OrdineService {
 	@Autowired
 	private OrdineMapper ordMap;
 
-	public ResponseEntity<OrdineDTO> generaOrdine(String nomeUtente) {
-		ResponseEntity<OrdineDTO> resp = null;
+	public OrdineDTO generaOrdine(String nomeUtente) {
+		OrdineDTO ordineDto = null;
 		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
 		if (carrello != null && !carrello.getListaSpesa().isEmpty()) {
 			Ordine ordine = new Ordine();
@@ -59,13 +57,12 @@ public class OrdineService {
 			}
 			ordine.setRigheOrdine(listaRighe);
 			ordine = ordRep.save(ordine);
-			OrdineDTO ordineDto = ordMap.toDto(ordine);
+			ordineDto = ordMap.toDto(ordine);
 			carrello.getListaSpesa().removeAll(carrello.getListaSpesa());
 			carrello = carRep.save(carrello);
-			resp = new ResponseEntity<OrdineDTO>(ordineDto, HttpStatus.OK);
 		} else {
-			resp = new ResponseEntity<OrdineDTO>(HttpStatus.BAD_REQUEST);
+			System.out.println("ERRORE : CARRELLO VUOTO O NULLO ");
 		}
-		return resp;
+		return ordineDto;
 	}
 }

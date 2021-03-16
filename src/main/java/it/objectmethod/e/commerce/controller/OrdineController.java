@@ -1,6 +1,7 @@
 package it.objectmethod.e.commerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -21,8 +22,9 @@ public class OrdineController {
 
 	@PostMapping("/genera-ordine")
 	public ResponseEntity<OrdineDTO> stampaOrdine(@RequestHeader("authentificationToken") String token) {
-		String nomeUtente = jwtSer.getUsername(token); // si prende il token da solo
-		ResponseEntity<OrdineDTO> resp = ordSer.generaOrdine(nomeUtente);
+		String nomeUtente = jwtSer.getUsername(token); 
+		OrdineDTO finalOrder = ordSer.generaOrdine(nomeUtente);
+		ResponseEntity<OrdineDTO> resp = new ResponseEntity<OrdineDTO>(finalOrder, HttpStatus.OK);
 		return resp;
 	}
 }

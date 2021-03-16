@@ -1,16 +1,10 @@
 package it.objectmethod.e.commerce.entity;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "utente")
@@ -25,11 +19,6 @@ public class Utente {
 
 	@Column(name = "password")
 	private String password;
-	
-    @JsonIgnore
-	@OneToMany
-	@JoinColumn(name = "id_utente")
-	private List<Ordine> ordiniDellUtente;
 
 	public Long getIdUtente() {
 		return idUtente;
@@ -53,14 +42,6 @@ public class Utente {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public List<Ordine> getOrdiniDellUtente() {
-		return ordiniDellUtente;
-	}
-
-	public void setOrdiniDellUtente(List<Ordine> ordiniDellUtente) {
-		this.ordiniDellUtente = ordiniDellUtente;
 	}
 
 }

@@ -30,7 +30,8 @@ public class UtenteController {
 		ResponseEntity<UtenteDTO> resp = null;
 		Utente utenteLoggato = repUtente.findByNomeUtenteAndPassword(username, password);
 		if (utenteLoggato != null) {
-			resp = uteSer.login(utenteLoggato);
+			UtenteDTO finalUtente = uteSer.convertToDto(utenteLoggato);
+			resp = new ResponseEntity<UtenteDTO>(finalUtente, HttpStatus.OK);
 			String token = jwtSer.generateJWTToken(utenteLoggato);
 			System.out.println("Token: " + token);
 		} else {

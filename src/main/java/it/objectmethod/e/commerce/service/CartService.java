@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import it.objectmethod.e.commerce.entity.Articolo;
 import it.objectmethod.e.commerce.entity.Cart;
@@ -18,7 +16,7 @@ import it.objectmethod.e.commerce.repository.UtenteRepository;
 import it.objectmethod.e.commerce.service.dto.CartDTO;
 import it.objectmethod.e.commerce.service.mapper.CartMapper;
 
-@Component
+@Service
 public class CartService {
 	@Autowired
 	private CartRepository carRep;
@@ -29,8 +27,8 @@ public class CartService {
 	@Autowired
 	private ArticoloRepository artRep;
 
-	public ResponseEntity<CartDTO> aggiungiProdotto(Integer qta, Integer idArticolo, String nomeUtente) {
-		ResponseEntity<CartDTO> resp = null;
+	public CartDTO aggiungiProdotto(Integer qta, Integer idArticolo, String nomeUtente) {
+		CartDTO carrelloDto = null;
 		Optional<Articolo> optArt = artRep.findById(idArticolo);
 
 		if (optArt.isPresent() && qta > 0) {
@@ -68,22 +66,20 @@ public class CartService {
 				}
 
 				carrello = carRep.save(carrello);
-				CartDTO carrelloDto = carMap.toDto(carrello);
-
-				resp = new ResponseEntity<CartDTO>(carrelloDto, HttpStatus.OK);
+				carrelloDto = carMap.toDto(carrello);
 
 			} else {
-				resp = new ResponseEntity<CartDTO>(HttpStatus.BAD_REQUEST);
+				System.out.println("Quantità disponibile inferiore alla quantità richiesta");
 			}
 
 		} else {
-			resp = new ResponseEntity<CartDTO>(HttpStatus.BAD_REQUEST);
+			System.out.println("Articolo non presente");
 		}
-		return resp;
+		return carrelloDto;
 	}
 
-	public ResponseEntity<CartDTO> rimuoviProdotto(Integer idArticolo, String nomeUtente) {
-		ResponseEntity<CartDTO> resp = null;
+	public CartDTO rimuoviProdotto(Integer idArticolo, String nomeUtente) {
+		CartDTO carrelloDto = null;
 		Articolo art = artRep.findById(idArticolo).get();
 		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
 
@@ -93,15 +89,14 @@ public class CartService {
 					art.setDisponibilita(art.getDisponibilita() + detail.getQuantita());
 					carrello.getListaSpesa().remove(detail);
 					carrello = carRep.save(carrello);
-					CartDTO carrelloDto = carMap.toDto(carrello);
-					resp = new ResponseEntity<CartDTO>(carrelloDto, HttpStatus.OK);
+					carrelloDto = carMap.toDto(carrello);
 					break;
 				}
 			}
 		} else {
-			resp = new ResponseEntity<CartDTO>(HttpStatus.BAD_REQUEST);
+			System.out.println("ERRORE ");
 		}
-		return resp;
+		return carrelloDto;
 	}
 
 }
