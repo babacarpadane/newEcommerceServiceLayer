@@ -10,6 +10,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,8 @@ public class AutentFilter implements Filter {
 
 	@Autowired
 	private JWTService jwtSer;
+
+	private static final Logger logger = LogManager.getLogger(AutentFilter.class);
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -36,11 +40,11 @@ public class AutentFilter implements Filter {
 				if (jwtSer.verifyToken(token)) {
 					chain.doFilter(request, response);
 				} else {
-					System.out.println("Token scaduto");
+					logger.info("Token scaduto");
 					resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				}
 			} else {
-				System.out.println("Token nullo");
+				logger.info("Token nullo");
 				resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			}
 		}

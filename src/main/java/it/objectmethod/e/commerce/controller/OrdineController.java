@@ -18,13 +18,18 @@ public class OrdineController {
 	@Autowired
 	private OrdineService ordSer;
 	@Autowired
-	private JWTService jwtSer;
-
+	private JWTService jwtSer;	
+	
 	@PostMapping("/genera-ordine")
 	public ResponseEntity<OrdineDTO> stampaOrdine(@RequestHeader("authentificationToken") String token) {
-		String nomeUtente = jwtSer.getUsername(token); 
-		OrdineDTO finalOrder = ordSer.generaOrdine(nomeUtente);
-		ResponseEntity<OrdineDTO> resp = new ResponseEntity<OrdineDTO>(finalOrder, HttpStatus.OK);
+		Long idUtente = jwtSer.getIdUtente(token);
+		OrdineDTO finalOrder = ordSer.generaOrdine(idUtente);
+		ResponseEntity<OrdineDTO> resp = null;
+		if (finalOrder != null) {
+			resp = new ResponseEntity<OrdineDTO>(finalOrder, HttpStatus.OK);
+		} else {
+			resp = new ResponseEntity<OrdineDTO>(HttpStatus.BAD_REQUEST);
+		}
 		return resp;
 	}
 }

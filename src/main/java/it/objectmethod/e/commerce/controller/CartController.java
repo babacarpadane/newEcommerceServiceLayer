@@ -20,22 +20,32 @@ public class CartController {
 	private CartService carSer;
 	@Autowired
 	private JWTService jwtSer;
-
+	
 	@GetMapping("/add")
 	public ResponseEntity<CartDTO> aggiungiProdotto(@RequestParam("qta") Integer qta,
 			@RequestParam("id_art") Integer idArticolo, @RequestHeader("authentificationToken") String token) {
-		String nomeUtente = jwtSer.getUsername(token);
-		CartDTO addedDetCart = carSer.aggiungiProdotto(qta, idArticolo, nomeUtente);
-		ResponseEntity<CartDTO> resp = new ResponseEntity<CartDTO>(addedDetCart, HttpStatus.OK);
+		Long idUtente = jwtSer.getIdUtente(token);
+		CartDTO addedDetCart = carSer.aggiungiProdotto(qta, idArticolo, idUtente);
+		ResponseEntity<CartDTO> resp = null;
+		if (addedDetCart != null) {
+			resp = new ResponseEntity<CartDTO>(addedDetCart, HttpStatus.OK);
+		} else {
+			resp = new ResponseEntity<CartDTO>(HttpStatus.BAD_REQUEST);
+		}
 		return resp;
 	}
 
 	@GetMapping("/remove")
 	public ResponseEntity<CartDTO> rimuoviProdotto(@RequestParam("id_art") Integer idArticolo,
 			@RequestHeader("authentificationToken") String token) {
-		String nomeUtente = jwtSer.getUsername(token);
-		CartDTO removedDetCart = carSer.rimuoviProdotto(idArticolo, nomeUtente);
-		ResponseEntity<CartDTO> resp = new ResponseEntity<CartDTO>(removedDetCart, HttpStatus.OK);
+		Long idUtente = jwtSer.getIdUtente(token);
+		CartDTO removedDetCart = carSer.rimuoviProdotto(idArticolo, idUtente);
+		ResponseEntity<CartDTO> resp = null;
+		if (removedDetCart != null) {
+			resp = new ResponseEntity<CartDTO>(removedDetCart, HttpStatus.OK);
+		} else {
+			resp = new ResponseEntity<CartDTO>(HttpStatus.BAD_REQUEST);
+		}
 		return resp;
 	}
 }

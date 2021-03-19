@@ -3,6 +3,8 @@ package it.objectmethod.e.commerce.service;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,14 @@ public class CartService {
 	@Autowired
 	private ArticoloRepository artRep;
 
-	public CartDTO aggiungiProdotto(Integer qta, Integer idArticolo, String nomeUtente) {
+	private static final Logger logger = LogManager.getLogger(CartService.class);
+
+	public CartDTO aggiungiProdotto(Integer qta, Integer idArticolo, Long idUtente) {
 		CartDTO carrelloDto = null;
 		Optional<Articolo> optArt = artRep.findById(idArticolo);
 
 		if (optArt.isPresent() && qta > 0) {
-			Utente user = uteRep.findByNomeUtente(nomeUtente).get();
+			Utente user = uteRep.findById(idUtente).get();
 			Articolo art = optArt.get();
 			int dispAggiornata = art.getDisponibilita() - qta;
 
@@ -40,7 +44,7 @@ public class CartService {
 				art.setDisponibilita(dispAggiornata);
 				art = artRep.save(art);
 
-				Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
+				Cart carrello = carRep.findByProprietarioCarrelloIdUtente(idUtente);
 				if (carrello == null) {
 					carrello = new Cart();
 					carrello.setProprietarioCarrello(user);
@@ -69,32 +73,45 @@ public class CartService {
 				carrelloDto = carMap.toDto(carrello);
 
 			} else {
-				System.out.println("Quantità disponibile inferiore alla quantità richiesta");
+				logger.info("Quantità richiesta superiore alla quantità disponibile");
 			}
 
 		} else {
-			System.out.println("Articolo non presente");
+			logger.info("Articolo inesistente");
 		}
 		return carrelloDto;
 	}
 
-	public CartDTO rimuoviProdotto(Integer idArticolo, String nomeUtente) {
+	public CartDTO rimuoviProdotto(Integer idArticolo, Long idUtente) {
 		CartDTO carrelloDto = null;
-		Articolo art = artRep.findById(idArticolo).get();
-		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
-
-		if (carrello != null && !carrello.getListaSpesa().isEmpty() && art != null) {
-			for (CartDetail detail : carrello.getListaSpesa()) {
-				if (detail.getArticolo().getIdArticolo().equals(art.getIdArticolo())) {
-					art.setDisponibilita(art.getDisponibilita() + detail.getQuantita());
-					carrello.getListaSpesa().remove(detail);
-					carrello = carRep.save(carrello);
-					carrelloDto = carMap.toDto(carrello);
-					break;
+		Articolo art = null;
+		try {
+			art = artRep.findById(idArticolo).get();
+		} catch (Exception e) {
+			logger.error("Articolo con id specificato inesistente", e);
+		}
+		Cart carrello = carRep.findByProprietarioCarrelloIdUtente(idUtente);
+		if (art != null) {
+			if (carrello != null && !carrello.getListaSpesa().isEmpty()) {
+				boolean detailNotFound = true;
+				for (CartDetail detail : carrello.getListaSpesa()) {
+					if (detail.getArticolo().getIdArticolo().equals(art.getIdArticolo())) {
+						art.setDisponibilita(art.getDisponibilita() + detail.getQuantita());
+						carrello.getListaSpesa().remove(detail);
+						carrello = carRep.save(carrello);
+						carrelloDto = carMap.toDto(carrello);
+						detailNotFound = false;
+						break;
+					}
 				}
+				if (detailNotFound) {
+					logger.info("Articolo non presente nel carrello");
+				}
+			} else {
+				logger.info("Carrello vuoto o inesistente");
 			}
 		} else {
-			System.out.println("ERRORE ");
+			logger.info("Articolo inesistente");
 		}
 		return carrelloDto;
 	}

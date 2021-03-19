@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +27,12 @@ public class OrdineService {
 	private OrdineRepository ordRep;
 	@Autowired
 	private OrdineMapper ordMap;
+	
+	private static final Logger logger = LogManager.getLogger(CartService.class);
 
-	public OrdineDTO generaOrdine(String nomeUtente) {
+	public OrdineDTO generaOrdine(Long idUtente) {
 		OrdineDTO ordineDto = null;
-		Cart carrello = carRep.findByProprietarioCarrelloNomeUtente(nomeUtente);
+		Cart carrello = carRep.findByProprietarioCarrelloIdUtente(idUtente);
 		if (carrello != null && !carrello.getListaSpesa().isEmpty()) {
 			Ordine ordine = new Ordine();
 
@@ -40,7 +44,6 @@ public class OrdineService {
 				String formattedNum = String.format("%06d", num);
 				codeForNewOrder = ch.concat(formattedNum);
 			} catch (NullPointerException e) {
-				e.printStackTrace();
 				codeForNewOrder = "A000000";
 			}
 			ordine.setNumeroOrdine(codeForNewOrder);
@@ -61,7 +64,7 @@ public class OrdineService {
 			carrello.getListaSpesa().removeAll(carrello.getListaSpesa());
 			carrello = carRep.save(carrello);
 		} else {
-			System.out.println("ERRORE : CARRELLO VUOTO O NULLO ");
+			logger.info("ERRORE : CARRELLO VUOTO, IMPOSSIBILE GENERARE ORDINE");
 		}
 		return ordineDto;
 	}
