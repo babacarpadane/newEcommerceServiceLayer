@@ -73,11 +73,11 @@ public class CartService {
 				carrelloDto = carMap.toDto(carrello);
 
 			} else {
-				logger.info("Quantità richiesta superiore alla quantità disponibile");
+				logger.error("Quantità richiesta superiore alla quantità disponibile");
 			}
 
 		} else {
-			logger.info("Articolo inesistente");
+			logger.error("Articolo inesistente");
 		}
 		return carrelloDto;
 	}
@@ -105,13 +105,13 @@ public class CartService {
 					}
 				}
 				if (detailNotFound) {
-					logger.info("Articolo non presente nel carrello");
+					logger.error("Articolo non presente nel carrello");
 				}
 			} else {
-				logger.info("Carrello vuoto o inesistente");
+				logger.error("Carrello vuoto o inesistente");
 			}
 		} else {
-			logger.info("Articolo inesistente");
+			logger.error("Articolo inesistente");
 		}
 		return carrelloDto;
 	}

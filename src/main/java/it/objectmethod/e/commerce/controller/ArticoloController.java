@@ -23,9 +23,9 @@ public class ArticoloController {
 	public ResponseEntity<List<ArticoloDTO>> findArticoliByNameOrCode(@RequestParam("name") String name,
 			@RequestParam("codiceArticolo") String codiceArticolo) {
 		ResponseEntity<List<ArticoloDTO>> resp = null;
-		List<ArticoloDTO> finalList = artSer.findArticoliByNameOrCode(name, codiceArticolo);
-		if (!finalList.isEmpty()) {
-			resp = new ResponseEntity<List<ArticoloDTO>>(finalList, HttpStatus.OK);
+		List<ArticoloDTO> articoli = artSer.findArticoliByNameOrCode(name, codiceArticolo);
+		if (!articoli.isEmpty()) {
+			resp = new ResponseEntity<List<ArticoloDTO>>(articoli, HttpStatus.OK);
 		} else {
 			resp = new ResponseEntity<List<ArticoloDTO>>(HttpStatus.BAD_REQUEST);
 		}

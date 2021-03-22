@@ -34,17 +34,15 @@ public class JWTService {
 			token = JWT.create().withClaim("idUtente", utenteLoggato.getIdUtente())
 					.withClaim("username", utenteLoggato.getNomeUtente()).withExpiresAt(expirationTime).sign(alg);
 		} else {
-			logger.info("Username o password errati ");
+			logger.error("Username o password errati ");
 		}
 		return token;
 	}
 
 	public boolean verifyToken(String token) {
 		boolean valid = false;
-		Algorithm alg = Algorithm.HMAC256(JWT_KEY);
 		try {
-			JWTVerifier verify = JWT.require(alg).build();
-			verify.verify(token);
+			decodeToken(token);
 			valid = true;
 		} catch (Exception e) {
 			logger.error("Verifica del token fallita", e);
@@ -53,12 +51,16 @@ public class JWTService {
 	}
 
 	public Long getIdUtente(String token) {
+		DecodedJWT decodedToken = decodeToken(token);
+		Long idUtente = decodedToken.getClaim("idUtente").asLong();
+		return idUtente;
+	}
+
+	private DecodedJWT decodeToken(String token) {
 		Algorithm alg = Algorithm.HMAC256(JWT_KEY);
 		JWTVerifier verify = JWT.require(alg).build();
 		DecodedJWT decodedToken = verify.verify(token);
-		Long idUtente = decodedToken.getClaim("idUtente").asLong();
-
-		return idUtente;
+		return decodedToken;
 	}
 
 }

@@ -64,7 +64,7 @@ public class OrdineService {
 			carrello.getListaSpesa().removeAll(carrello.getListaSpesa());
 			carrello = carRep.save(carrello);
 		} else {
-			logger.info("ERRORE : CARRELLO VUOTO, IMPOSSIBILE GENERARE ORDINE");
+			logger.error("Carrello vuoto, impossibile generare ordine");
 		}
 		return ordineDto;
 	}

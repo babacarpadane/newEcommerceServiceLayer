@@ -23,10 +23,10 @@ public class OrdineController {
 	@PostMapping("/genera-ordine")
 	public ResponseEntity<OrdineDTO> stampaOrdine(@RequestHeader("authentificationToken") String token) {
 		Long idUtente = jwtSer.getIdUtente(token);
-		OrdineDTO finalOrder = ordSer.generaOrdine(idUtente);
+		OrdineDTO order = ordSer.generaOrdine(idUtente);
 		ResponseEntity<OrdineDTO> resp = null;
-		if (finalOrder != null) {
-			resp = new ResponseEntity<OrdineDTO>(finalOrder, HttpStatus.OK);
+		if (order != null) {
+			resp = new ResponseEntity<OrdineDTO>(order, HttpStatus.OK);
 		} else {
 			resp = new ResponseEntity<OrdineDTO>(HttpStatus.BAD_REQUEST);
 		}
