@@ -27,7 +27,7 @@ public class OrdineService {
 	private OrdineRepository ordRep;
 	@Autowired
 	private OrdineMapper ordMap;
-	
+
 	private static final Logger logger = LogManager.getLogger(CartService.class);
 
 	public OrdineDTO generaOrdine(Long idUtente) {
@@ -39,11 +39,17 @@ public class OrdineService {
 			String codeForNewOrder = null;
 			try {
 				String code = ordRep.findLastNumeroOrdine();
-				String ch = code.substring(0, 1);
+				char ch = code.substring(0, 1).charAt(0);
 				int num = Integer.parseInt(code.substring(1)) + 1;
-				String formattedNum = String.format("%06d", num);
-				codeForNewOrder = ch.concat(formattedNum);
+				String formattedNum = "";
+				if (num > 999999) {
+					num = 0;
+					ch++;
+				}
+				formattedNum = String.format("%06d", num);
+				codeForNewOrder = Character.toString(ch).concat(formattedNum);
 			} catch (NullPointerException e) {
+				logger.error("Nessun numero ordine presente presente", e);
 				codeForNewOrder = "A000000";
 			}
 			ordine.setNumeroOrdine(codeForNewOrder);
