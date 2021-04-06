@@ -12,12 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import it.objectmethod.e.commerce.service.JWTService;
 
 @Component
+@Order(2)
 public class AutentFilter implements Filter {
 
 	@Autowired
@@ -32,7 +34,7 @@ public class AutentFilter implements Filter {
 		HttpServletResponse resp = (HttpServletResponse) response;
 		String url = req.getRequestURI();
 
-		if (url.endsWith("login")) {
+		if (/*url.endsWith("login")*/ true) {
 			chain.doFilter(request, response);
 		} else {
 			String token = req.getHeader("authentificationToken");

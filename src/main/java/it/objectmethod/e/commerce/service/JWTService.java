@@ -33,6 +33,7 @@ public class JWTService {
 			// (Date.from(ZonedDateTime.now().plusDays(1).toInstant()))
 			token = JWT.create().withClaim("idUtente", utenteLoggato.getIdUtente())
 					.withClaim("username", utenteLoggato.getNomeUtente()).withExpiresAt(expirationTime).sign(alg);
+			System.out.println(token);
 		} else {
 			logger.error("Username o password errati ");
 		}
