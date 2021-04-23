@@ -34,7 +34,7 @@ public class AutentFilter implements Filter {
 		HttpServletResponse resp = (HttpServletResponse) response;
 		String url = req.getRequestURI();
 
-		if (/*url.endsWith("login")*/ true) {
+		if (/*url.endsWith("login")*/ true) { //modificato per eserciz. jscript 
 			chain.doFilter(request, response);
 		} else {
 			String token = req.getHeader("authentificationToken");

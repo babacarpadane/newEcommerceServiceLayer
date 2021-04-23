@@ -3,6 +3,7 @@ package it.objectmethod.e.commerce.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class CartController {
 	@Autowired
 	private JWTService jwtSer;
 	
+	@Transactional
 	@GetMapping("/add")
 	public ResponseEntity<CartDTO> aggiungiProdotto(@RequestParam("qta") Integer qta,
 			@RequestParam("id_art") Integer idArticolo, @RequestHeader("authentificationToken") String token) {
@@ -34,7 +36,8 @@ public class CartController {
 		}
 		return resp;
 	}
-
+	
+	@Transactional
 	@GetMapping("/remove")
 	public ResponseEntity<CartDTO> rimuoviProdotto(@RequestParam("id_art") Integer idArticolo,
 			@RequestHeader("authentificationToken") String token) {
