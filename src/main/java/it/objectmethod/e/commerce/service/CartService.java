@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -33,6 +34,8 @@ public class CartService {
 	private CartMapper carMap;
 	@Autowired
 	private ArticoloRepository artRep;
+	@Autowired
+	private Environment environment;
 
 	private static final Logger logger = LogManager.getLogger(CartService.class);
 
@@ -124,13 +127,14 @@ public class CartService {
 	public ArticoloDTO[] articoliDisponibili() {
 		ArticoloDTO[] listaArticoli = null;
 
+		String port = environment.getProperty("local.server.port");
 		String ipAddress = null;
 		try {
 			ipAddress = InetAddress.getLocalHost().getHostAddress(); // "192.168.1.90"
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		} 
-		String url = "http://" + ipAddress + ":8080/api/articolo";
+		}
+		String url = "http://" + ipAddress + ":" + port + "/api/articolo";
 
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
