@@ -14,7 +14,7 @@ public class Articolo {
 	@GeneratedValue
 	@Id
 	@Column(name = "id_articolo")
-	private Integer idArticolo;
+	private Long idArticolo;
 	
 	@JsonIgnore
 	@Column(name = "disponibilita")
@@ -29,11 +29,11 @@ public class Articolo {
 	@Column(name = "prezzo_unitario")
 	private Double prezzoUnitario;
 
-	public Integer getIdArticolo() {
+	public Long getIdArticolo() {
 		return idArticolo;
 	}
 
-	public void setIdArticolo(Integer idArticolo) {
+	public void setIdArticolo(Long idArticolo) {
 		this.idArticolo = idArticolo;
 	}
 

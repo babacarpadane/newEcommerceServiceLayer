@@ -20,7 +20,7 @@ public class ArticoloService {
 	ArticoloMapper artMap;
 	private static final Logger logger = LogManager.getLogger(ArticoloService.class);
 
-	public List<ArticoloDTO> findArticoliByNameOrCode(String name, String codiceArticolo) {	
+	public List<ArticoloDTO> findArticoliByNameOrCode(String name, String codiceArticolo) {
 		List<ArticoloDTO> articoliTrovatiDto = null;
 		try {
 			List<Articolo> articoliTrovati = repArticolo.trovaArticoli(name, codiceArticolo);
@@ -30,4 +30,27 @@ public class ArticoloService {
 		}
 		return articoliTrovatiDto;
 	}
+
+	public ArticoloDTO findArticoloById(Long id) {
+		ArticoloDTO articoloTrovatoDto = null;
+		try {
+			Articolo articoloTrovato = repArticolo.findById(id).get();
+			articoloTrovatoDto = artMap.toDto(articoloTrovato);
+		} catch (Exception e) {
+			logger.error("ID dell'articolo errato", e);
+		}
+		return articoloTrovatoDto;
+	}
+
+	public List<ArticoloDTO> findAll() {
+		List<ArticoloDTO> articoliTrovatiDto = null;
+		try {
+			List<Articolo> articoliTrovati = repArticolo.findAll();
+			articoliTrovatiDto = artMap.toDto(articoliTrovati);
+		} catch (Exception e) {
+			logger.error("Errore", e);
+		}
+		return articoliTrovatiDto;
+	}
+
 }

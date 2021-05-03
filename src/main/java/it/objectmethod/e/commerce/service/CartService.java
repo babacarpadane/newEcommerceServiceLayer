@@ -1,12 +1,16 @@
 package it.objectmethod.e.commerce.service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import it.objectmethod.e.commerce.entity.Articolo;
 import it.objectmethod.e.commerce.entity.Cart;
@@ -15,6 +19,7 @@ import it.objectmethod.e.commerce.entity.Utente;
 import it.objectmethod.e.commerce.repository.ArticoloRepository;
 import it.objectmethod.e.commerce.repository.CartRepository;
 import it.objectmethod.e.commerce.repository.UtenteRepository;
+import it.objectmethod.e.commerce.service.dto.ArticoloDTO;
 import it.objectmethod.e.commerce.service.dto.CartDTO;
 import it.objectmethod.e.commerce.service.mapper.CartMapper;
 
@@ -31,7 +36,7 @@ public class CartService {
 
 	private static final Logger logger = LogManager.getLogger(CartService.class);
 
-	public CartDTO aggiungiProdotto(Integer qta, Integer idArticolo, Long idUtente) {
+	public CartDTO aggiungiProdotto(Integer qta, Long idArticolo, Long idUtente) {
 		CartDTO carrelloDto = null;
 		Optional<Articolo> optArt = artRep.findById(idArticolo);
 
@@ -82,7 +87,7 @@ public class CartService {
 		return carrelloDto;
 	}
 
-	public CartDTO rimuoviProdotto(Integer idArticolo, Long idUtente) {
+	public CartDTO rimuoviProdotto(Long idArticolo, Long idUtente) {
 		CartDTO carrelloDto = null;
 		Articolo art = null;
 		try {
@@ -116,4 +121,43 @@ public class CartService {
 		return carrelloDto;
 	}
 
+	public ArticoloDTO[] articoliDisponibili() {
+		ArticoloDTO[] listaArticoli = null;
+
+		String ipAddress = null;
+		try {
+			InetAddress ipAndHostName = InetAddress.getLocalHost(); // "Babacar/192.168.1.90"
+			ipAddress = ipAndHostName.toString().split("/")[1]; // [Babacar, 192.168.1.90]
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		String url = "http://" + ipAddress + ":8080/api/articolo";
+
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+		listaArticoli = restTemplate.getForObject(url, ArticoloDTO[].class);
+
+//      Secondo metodo:
+//		CloseableHttpClient chiamata = HttpClients.createDefault();
+//		HttpGet httpGet = new HttpGet(url);
+//		CloseableHttpResponse response = null;
+//		try {
+//			response = chiamata.execute(httpGet);
+//			String articoli = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+//			Gson gson = new Gson();
+//			listaArticoli = gson.fromJson(articoli, ArticoloDTO[].class);
+//		} catch (ClientProtocolException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				response.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+
+		return listaArticoli;
+	}
 }

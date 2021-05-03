@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.objectmethod.e.commerce.service.CartService;
 import it.objectmethod.e.commerce.service.JWTService;
+import it.objectmethod.e.commerce.service.dto.ArticoloDTO;
 import it.objectmethod.e.commerce.service.dto.CartDTO;
 
 @RestController
@@ -21,11 +22,11 @@ public class CartController {
 	private CartService carSer;
 	@Autowired
 	private JWTService jwtSer;
-	
+
 	@Transactional
 	@GetMapping("/add")
 	public ResponseEntity<CartDTO> aggiungiProdotto(@RequestParam("qta") Integer qta,
-			@RequestParam("id_art") Integer idArticolo, @RequestHeader("authentificationToken") String token) {
+			@RequestParam("id_art") Long idArticolo, @RequestHeader("authentificationToken") String token) {
 		Long idUtente = jwtSer.getIdUtente(token);
 		CartDTO addedDetCart = carSer.aggiungiProdotto(qta, idArticolo, idUtente);
 		ResponseEntity<CartDTO> resp = null;
@@ -36,10 +37,10 @@ public class CartController {
 		}
 		return resp;
 	}
-	
+
 	@Transactional
 	@GetMapping("/remove")
-	public ResponseEntity<CartDTO> rimuoviProdotto(@RequestParam("id_art") Integer idArticolo,
+	public ResponseEntity<CartDTO> rimuoviProdotto(@RequestParam("id_art") Long idArticolo,
 			@RequestHeader("authentificationToken") String token) {
 		Long idUtente = jwtSer.getIdUtente(token);
 		CartDTO removedDetCart = carSer.rimuoviProdotto(idArticolo, idUtente);
@@ -49,6 +50,20 @@ public class CartController {
 		} else {
 			resp = new ResponseEntity<CartDTO>(HttpStatus.BAD_REQUEST);
 		}
+		return resp;
+	}
+
+	@Transactional
+	@GetMapping("/articoli-disponibili")
+	public ResponseEntity<ArticoloDTO[]> mostraArticoliDisponbili() {
+		ResponseEntity<ArticoloDTO[]> resp = null;
+		ArticoloDTO[] listaArticoli = carSer.articoliDisponibili();
+		if (listaArticoli.length > 0) {
+			resp = new ResponseEntity<ArticoloDTO[]>(listaArticoli, HttpStatus.OK);
+		} else {
+			resp = new ResponseEntity<ArticoloDTO[]>(HttpStatus.BAD_REQUEST);
+		}
+
 		return resp;
 	}
 }
