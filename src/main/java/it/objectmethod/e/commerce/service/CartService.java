@@ -127,13 +127,13 @@ public class CartService {
 	public ArticoloDTO[] articoliDisponibili() {
 		ArticoloDTO[] listaArticoli = null;
 
-		String port = environment.getProperty("local.server.port");
 		String ipAddress = null;
 		try {
 			ipAddress = InetAddress.getLocalHost().getHostAddress(); // "192.168.1.90"
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		String port = environment.getProperty("local.server.port");
 		String url = "http://" + ipAddress + ":" + port + "/api/articolo";
 
 		RestTemplate restTemplate = new RestTemplate();
