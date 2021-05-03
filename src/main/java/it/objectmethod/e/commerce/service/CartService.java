@@ -131,7 +131,7 @@ public class CartService {
 		try {
 			ipAddress = InetAddress.getLocalHost().getHostAddress(); // "192.168.1.90"
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			logger.error("Non è stato possibile ottenere l'indirizzo IP", e);
 		}
 		String port = environment.getProperty("local.server.port");
 		String url = "http://" + ipAddress + ":" + port + "/api/articolo";

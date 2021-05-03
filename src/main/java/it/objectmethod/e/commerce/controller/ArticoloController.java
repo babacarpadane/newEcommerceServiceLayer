@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.objectmethod.e.commerce.service.ArticoloService;
@@ -21,20 +20,6 @@ import it.objectmethod.e.commerce.service.dto.ArticoloDTO;
 public class ArticoloController {
 	@Autowired
 	private ArticoloService artSer;
-
-	@Transactional
-	@GetMapping("/trova-articoli")
-	public ResponseEntity<List<ArticoloDTO>> findArticoliByNameOrCode(@RequestParam("name") String name,
-			@RequestParam("codiceArticolo") String codiceArticolo) {
-		ResponseEntity<List<ArticoloDTO>> resp = null;
-		List<ArticoloDTO> articoli = artSer.findArticoliByNameOrCode(name, codiceArticolo);
-		if (!articoli.isEmpty()) {
-			resp = new ResponseEntity<List<ArticoloDTO>>(articoli, HttpStatus.OK);
-		} else {
-			resp = new ResponseEntity<List<ArticoloDTO>>(HttpStatus.BAD_REQUEST);
-		}
-		return resp;
-	}
 
 	@Transactional
 	@GetMapping(value = { "", "/{idArticolo}" })
@@ -58,8 +43,22 @@ public class ArticoloController {
 				resp = new ResponseEntity<List<ArticoloDTO>>(HttpStatus.BAD_REQUEST);
 			}
 		}
-		
+
 		return resp;
 	}
+
+//	@Transactional
+//	@GetMapping("/trova-articoli")
+//	public ResponseEntity<List<ArticoloDTO>> findArticoliByNameOrCode(@RequestParam("name") String name,
+//			@RequestParam("codiceArticolo") String codiceArticolo) {
+//		ResponseEntity<List<ArticoloDTO>> resp = null;
+//		List<ArticoloDTO> articoli = artSer.findArticoliByNameOrCode(name, codiceArticolo);
+//		if (!articoli.isEmpty()) {
+//			resp = new ResponseEntity<List<ArticoloDTO>>(articoli, HttpStatus.OK);
+//		} else {
+//			resp = new ResponseEntity<List<ArticoloDTO>>(HttpStatus.BAD_REQUEST);
+//		}
+//		return resp;
+//	}
 
 }
