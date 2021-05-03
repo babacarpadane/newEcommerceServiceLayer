@@ -126,11 +126,10 @@ public class CartService {
 
 		String ipAddress = null;
 		try {
-			InetAddress ipAndHostName = InetAddress.getLocalHost(); // "Babacar/192.168.1.90"
-			ipAddress = ipAndHostName.toString().split("/")[1]; // [Babacar, 192.168.1.90]
+			ipAddress = InetAddress.getLocalHost().getHostAddress(); // "192.168.1.90"
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		}
+		} 
 		String url = "http://" + ipAddress + ":8080/api/articolo";
 
 		RestTemplate restTemplate = new RestTemplate();
