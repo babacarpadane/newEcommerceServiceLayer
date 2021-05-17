@@ -55,7 +55,8 @@ public class CartController {
 
 	@Transactional
 	@GetMapping("/articoli-disponibili")
-	public ResponseEntity<ArticoloDTO[]> mostraArticoliDisponbili() {
+	public ResponseEntity<ArticoloDTO[]> mostraArticoliDisponbili(
+			@RequestHeader("authentificationToken") String token) {
 		ResponseEntity<ArticoloDTO[]> resp = null;
 		ArticoloDTO[] listaArticoli = carSer.articoliDisponibili();
 		if (listaArticoli.length > 0) {

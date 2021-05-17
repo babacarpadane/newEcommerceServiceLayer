@@ -15,7 +15,7 @@ public class Articolo {
 	@Id
 	@Column(name = "id_articolo")
 	private Long idArticolo;
-	
+
 	@JsonIgnore
 	@Column(name = "disponibilita")
 	private Integer disponibilita;
@@ -28,6 +28,9 @@ public class Articolo {
 
 	@Column(name = "prezzo_unitario")
 	private Double prezzoUnitario;
+
+	@Column(name = "image")
+	private String image;
 
 	public Long getIdArticolo() {
 		return idArticolo;
@@ -67,6 +70,14 @@ public class Articolo {
 
 	public void setPrezzoUnitario(double prezzoUnitario) {
 		this.prezzoUnitario = prezzoUnitario;
+	}
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 }
